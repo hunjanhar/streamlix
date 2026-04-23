@@ -15,6 +15,7 @@ ssl._create_default_https_context = ssl.create_default_context(cafile=certifi.wh
 app = Flask(__name__)
 
 progress_data = {}
+error_messages = {}
 file_paths = {}
 from urllib.parse import urlparse
 
@@ -133,7 +134,10 @@ def download():
 
 @app.route('/progress/<task_id>')
 def progress(task_id):
-    return jsonify({'progress': progress_data.get(task_id, 0)})
+    return jsonify({
+        'progress': progress_data.get(task_id, 0),
+        'error': error_messages.get(task_id)
+    })
 
 @app.route('/download_file/<format_id>')
 def download_file(format_id):
@@ -176,6 +180,7 @@ def download_file(format_id):
 
         except Exception as e:
             progress_data[task_id] = -1
+            error_messages[task_id] = str(e) 
 
     threading.Thread(target=run_download).start()
     return "started"
