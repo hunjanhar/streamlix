@@ -1,0 +1,67 @@
+# Byte-compiled / optimized / DLL files
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+
+venv/
+env/
+ENV/
+
+# Flask instance folder
+
+instance/
+
+# Environment variables
+
+.env
+.env.*
+
+# Logs
+
+*.log
+
+# SQLite database
+
+*.sqlite3
+*.db
+
+# Mac system files
+
+.DS_Store
+
+# Windows system files
+
+Thumbs.db
+
+# IDEs and editors
+
+.vscode/
+.idea/
+
+# Python cache
+
+.pytest_cache/
+.mypy_cache/
+
+# Distribution / packaging
+
+build/
+dist/
+*.egg-info/
+
+# Static files (optional if generated)
+
+static/uploads/
+
+# Node modules (if using frontend tools)
+
+node_modules/
+
+# Coverage reports
+
+htmlcov/
+.coverage
+.coverage.*

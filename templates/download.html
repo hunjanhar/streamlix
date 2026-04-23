@@ -1,0 +1,162 @@
+{% include "header.html" %}
+
+<body>
+    <main>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" class="navbar-brand-image img-fluid"
+                        alt="Tiya Golf Club">
+                    <span class="navbar-brand-text">
+                        Streamlix
+                    </span>
+                </a>
+                <div class="d-lg-none ms-auto me-3">
+                    <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample"
+                        role="button" aria-controls="offcanvasExample">Buy me a Coffee🥤</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarNav" style="justify-content: end;">
+                    <div class="d-none d-lg-block ms-lg-3">
+                        <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample"
+                            role="button" aria-controls="offcanvasExample">Buy me a Coffee🥤</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Support My Work🥤</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body d-flex flex-column">
+                <div>
+                    <div>
+                        <p style="color: white;">If you like this project, you can support me!</p>
+                        <img height="300" width="300" src="{{ url_for('static', filename='images/G-pay.png') }}"
+                            alt="Google Pay QR">
+                    </div>
+                    <div>
+                        <p class="mt-2" style="color: white;text-align: center;">UPI ID: harjinderhunjan44@oksbi</p>
+                        <p style="color: white;text-align: center;"><a class="pay"
+                                href="https://payments.google.com/gp/w/u/0/home/signup">Pay with Google Pay</a></p>
+                    </div>
+                </div>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#3D405B" fill-opacity="1"
+                    d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+        <section class="hero-section hero-50 d-flex justify-content-center align-items-center">
+            <div class="section-overlay"></div>
+            <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path fill="#3D405B" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#3D405B" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#3D405B" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#3D405B" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#3D405B" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z"
+                    stroke-width="0"></path>
+                <path fill="#3D405B" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z"
+                    stroke-width="0"></path>
+                <path fill="#3D405B" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z"
+                    stroke-width="0"></path>
+            </svg>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-12">
+                        <h1 class="text-white mb-4 pb-2">Download Options</h1>
+                    </div>
+                </div>
+            </div>
+            <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path fill="#ffffff" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#ffffff" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#ffffff" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#ffffff" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z"
+                    stroke-width="0">
+                </path>
+                <path fill="#ffffff" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z"
+                    stroke-width="0"></path>
+                <path fill="#ffffff" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z"
+                    stroke-width="0"></path>
+                <path fill="#ffffff" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z"
+                    stroke-width="0"></path>
+            </svg>
+        </section>
+        <section class="events-section events-detail-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-8 col-8 mx-auto">
+                        <h2 class="mb-lg-5 mb-4">{{ title }}</h2>
+                        {% if thum %}
+                        <div class="custom-block-image-wrap">
+                            <a href="{{ video_url }}">
+                                <img style="border-radius: 20px;height: 30rem;width: 70rem;" src="{{ thum }}"
+                                    class="custom-block-image img-fluid" alt="">
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div id="progressContainer" class="progress mt-3 custom-progress" style="display:none;">
+                            <progress id="progressBar" value="0" max="100"></progress>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div id="error-download">
+                        </div>
+                        {% if message %}
+                        <div class="alert alert-warning mt-2" role="alert">
+                            <b>Something Went Wrong !!!</b> <br> Try again later...
+                        </div>
+                        {% endif %}
+                        <div class="events-detail-info row my-5">
+                            <div class="col-lg-12 col-12">
+                                <h3 class="mb-3">Video Downloads</h3>
+                            </div>
+                            <div>
+                                {% for res, formats in video_groups.items() %}
+                                <h4 class="mt-2">{{ res }}p</h4>
+                                <select onchange="startDownload(this.value,'{{ video_url }}')"
+                                    class="form-control form-control-sm">
+                                    <option value="" disabled selected><b>Select Quality</b></option>
+                                    {% for f in formats %}
+                                    <option value="{{ f.format_id }}">{{ f.ext }} | {{ f.size }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                <h3 class="mb-3 mt-3">Audio Downloads</h3>
+                            </div>
+                            <div>
+                                <select onchange="startDownload(this.value,'{{ video_url }}')"
+                                    class="form-control form-control-sm">
+                                    <option value="" disabled selected><b>Select Quality</b></option>
+                                    {% for a in audio_streams %}
+                                    <option value="{{ a.format_id }}">{{ a.ext }} | {{ a.abr }}kbps | {{
+                                        a.size }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+    {% include "footer.html" %}
