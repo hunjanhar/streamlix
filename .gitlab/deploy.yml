@@ -1,0 +1,45 @@
+deploy-k8s:
+  stage: deploy
+  image: alpine:latest
+  needs:
+    - push-app
+  dependencies: []
+  before_script:
+    - apk add --no-cache openssh-client rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${EC2_USER}@${SERVER_IP} "mkdir -p /tmp/streamlix /tmp/logs"
+    - scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r k8s/prod/* ${EC2_USER}@${SERVER_IP}:/tmp/streamlix/
+
+    - |
+      ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${EC2_USER}@${SERVER_IP} "
+      export KUBECONFIG=\$HOME/.kube/config
+      sed -i 's|hunjanhar/streamlix-app:.*|hunjanhar/streamlix-app:${IMAGE_TAG}|g' /tmp/streamlix/deployment.yml
+      kubectl apply -k /tmp/streamlix/.
+      kubectl rollout status deployment/streamlix-app-deployment -n streamlix-ns --timeout=150s
+      "
+
+start-port-forwards:
+  stage: deploy
+  image: alpine:latest
+  needs:
+    - deploy-k8s
+  dependencies: []
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - |
+      ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${EC2_USER}@${SERVER_IP} "
+      export KUBECONFIG=\$HOME/.kube/config
+      sudo killall kubectl || true
+      mkdir -p /tmp/logs
+      nohup kubectl port-forward svc/prometheus-stack-grafana 3000:80 -n monitoring --address 0.0.0.0 > /tmp/logs/grafana.log 2>&1 &
+      nohup kubectl port-forward svc/prometheus-stack-kube-prom-prometheus 9090:9090 -n monitoring --address 0.0.0.0 > /tmp/logs/prometheus.log 2>&1 &
+      nohup kubectl port-forward svc/streamlix-app-service 5000:5000 -n streamlix-ns --address 0.0.0.0 > /tmp/logs/app.log 2>&1 &
+      sleep 2
+      "

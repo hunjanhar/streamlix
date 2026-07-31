@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlix-app-service
+  namespace: streamlix-app-ns
+  labels:
+    app: streamlix-app
+spec:
+  selector:
+    app: streamlix-app
+  ports:
+  - name: http
+    port: 5000
+    targetPort: 5000
+    

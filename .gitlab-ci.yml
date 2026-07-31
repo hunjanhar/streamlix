@@ -1,0 +1,19 @@
+variables:
+  IMAGE: "$DOCKERHUB_USERNAME/streamlix-app"
+  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+  IMAGE_TAR: "streamlix-app.tar"
+  EC2_USER: "ubuntu"
+
+stages:
+  - test
+  - security-scan
+  - build
+  - deploy
+  - notify
+
+include:
+  - local: '.gitlab/test.yml'
+  - local: '.gitlab/security.yml'
+  - local: '.gitlab/build.yml'
+  - local: '.gitlab/deploy.yml'
+  - local: '.gitlab/notify.yml'

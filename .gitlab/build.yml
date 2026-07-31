@@ -1,0 +1,42 @@
+build-app:
+  stage: build
+  image: docker:24.0.7
+  services:
+    - docker:24.0.7-dind
+  script:
+    - docker build -t $IMAGE .
+    - docker save $IMAGE -o $IMAGE_TAR
+  artifacts:
+    paths:
+      - $IMAGE_TAR
+    expire_in: 1 hour
+
+scan-image:
+  stage: build
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  needs:
+    - build-app
+  dependencies:
+    - build-app
+  script:
+    - trivy image --input $IMAGE_TAR --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed
+
+push-app:
+  stage: build
+  image: docker:24.0.7
+  services:
+    - docker:24.0.7-dind
+  needs:
+    - build-app
+    - scan-image
+  dependencies:
+    - build-app
+  script:
+    - docker load -i $IMAGE_TAR
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    - IMAGE_REPO=$(echo $IMAGE | cut -d':' -f1)
+    - docker tag $IMAGE $IMAGE_REPO:latest
+    - docker push $IMAGE
+    - docker push $IMAGE_REPO:latest

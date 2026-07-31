@@ -1,0 +1,6 @@
+---
+- name: Install config on All Servers
+  hosts: servers
+  become: yes
+  roles:
+    - config

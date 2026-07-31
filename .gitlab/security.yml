@@ -1,0 +1,49 @@
+trivy-fs-and-config:
+  stage: security-scan
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  before_script:
+    - apk add --no-complain wget || true
+    - wget -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -O html.tpl
+  script:
+    - trivy fs --format template --template "@html.tpl" --output trivy-fs-report.html --scanners vuln,secret,misconfig .
+    - trivy fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 .
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - trivy-fs-report.html
+
+trufflehog_scan:
+  stage: security-scan
+  image:
+    name: trufflesecurity/trufflehog:latest
+    entrypoint: [""]
+  script:
+    - trufflehog git file://. --since-commit HEAD~1 --only-verified --fail
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+semgrep_sast:
+  stage: security-scan
+  image: returntocorp/semgrep:latest
+  variables:
+    SEMGREP_RULES: "p/default"
+  before_script:
+    - pip install --break-system-packages sarif-tools
+  script:
+    - semgrep scan --config=$SEMGREP_RULES --gitlab-sast -o gl-sast-report.json .
+    - semgrep scan --config=$SEMGREP_RULES --sarif -o report.sarif .
+    - sarif html report.sarif -o report.html
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+    paths:
+      - gl-sast-report.json
+      - report.html
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

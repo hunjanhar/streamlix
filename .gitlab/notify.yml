@@ -1,0 +1,75 @@
+.notify_template:
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache msmtp jq curl
+  script:
+    - |
+      cat <<EOF > /etc/msmtprc
+      account default
+      host smtp.gmail.com
+      port 587
+      auth on
+      user $USER_EMAIL
+      password $USER_APP_PASSWORD
+      from $USER_EMAIL
+      tls on
+      tls_starttls on
+      EOF
+    - |
+      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/jobs" > jobs.json
+      # Create an HTML table from the JSON
+      # Only show the relevant stages
+      JOBS_HTML=$(jq -r '.[] | select(.stage | IN("test", "security-scan", "build", "deploy")) | "<tr><td style=\"padding:8px; border-bottom:1px solid #eee;\">\(.name)</td><td style=\"padding:8px; border-bottom:1px solid #eee;\">\(.status)</td></tr>"' jobs.json)
+
+notify_success:
+  extends: .notify_template
+  stage: notify
+  when: on_success
+  script:
+    - !reference [.notify_template, script]
+    - |
+      cat <<EOF > email.html
+      Subject: ✅ Pipeline Success - $CI_PROJECT_NAME
+      MIME-Version: 1.0
+      Content-Type: text/html; charset=utf-8
+
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px;">
+        <div style="background-color: #27ae60; color: white; padding: 15px; text-align: center;"><h1>Pipeline Success! 🎉</h1></div>
+        <div style="padding: 20px;">
+          <p>Branch: <b>$CI_COMMIT_BRANCH</b></p>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr style="background:#f4f4f4;"><th style="padding:8px; text-align:left;">Job</th><th style="padding:8px; text-align:left;">Status</th></tr></thead>
+            <tbody>$JOBS_HTML</tbody>
+          </table>
+          <br><a href="http://${SERVER_IP}:5000" style="padding:10px 20px; background:#27ae60; color:#fff; text-decoration:none; border-radius:5px;">View App</a>
+        </div>
+      </div>
+      EOF
+    - msmtp $EMAIL < email.html
+
+notify_failure:
+  extends: .notify_template
+  stage: notify
+  when: on_failure
+  script:
+    - !reference [.notify_template, script]
+    - |
+      # (Use the same logic to generate JOBS_HTML here)
+      cat <<EOF > email.html
+      Subject: ❌ Pipeline Failed - $CI_PROJECT_NAME
+      MIME-Version: 1.0
+      Content-Type: text/html; charset=utf-8
+
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px;">
+        <div style="background-color: #e74c3c; color: white; padding: 15px; text-align: center;"><h1>Pipeline Failed ⚠️</h1></div>
+        <div style="padding: 20px;">
+          <p>The pipeline for <b>$CI_COMMIT_BRANCH</b> failed.</p>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr style="background:#f4f4f4;"><th style="padding:8px; text-align:left;">Job</th><th style="padding:8px; text-align:left;">Status</th></tr></thead>
+            <tbody>$JOBS_HTML</tbody>
+          </table>
+          <br><a href="$CI_JOB_URL" style="padding:10px 20px; background:#e74c3c; color:#fff; text-decoration:none; border-radius:5px;">Check Logs</a>
+        </div>
+      </div>
+      EOF
+    - msmtp $EMAIL < email.html

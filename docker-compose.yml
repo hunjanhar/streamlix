@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    image: streamlix-app:latest
+    container_name: streamlix-app
+    restart: always
+    volumes:
+      - streamlix_temp_data:/app/temp
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5000:5000"
+
+volumes:
+  streamlix_temp_data:
+    driver: local

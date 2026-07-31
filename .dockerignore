@@ -1,0 +1,17 @@
+.dockerignore
+.python-version
+docker-compose.yml
+Dockerfile
+.venv
+.gitlab
+k8s
+.gitignore
+.gitlab-ci.yml
+remote-infa
+terraform
+__pycache__/
+.pytest_cache
+scripts
+test_app.py
+.env
+assets

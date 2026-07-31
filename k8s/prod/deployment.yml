@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlix-app-deployment
+  namespace: streamlix-ns
+  labels:
+    app: streamlix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlix-app
+  template:
+    metadata:
+      labels:
+        app: streamlix-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: streamlix-app
+          image: hunjanhar/streamlix-app:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: "100m"   
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: temp-storage
+              mountPath: /app/temp
+            - name: tmp-dir
+              mountPath: /tmp
+      volumes:
+        - name: temp-storage
+          persistentVolumeClaim:
+            claimName: streamlix-temp-data
+        - name: tmp-dir
+          emptyDir: {}
